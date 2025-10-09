@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="./assets/img/3DStrategyHub.svg">
+    <title> 3DStrategyHub - 3D Runner Game</title>
+    <meta name="description" content=" 3DStrategyHub is a 3D runner game where you control a character to collect points.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1f2d 0%, #131722 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav {
+            background-color: rgba(26, 31, 45, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+        
+        .logo img {
+            height: 32px;
+            margin-right: 10px;
+        }
+        
+        .menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .menu a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .menu a:hover {
+            color: #fff;
+            opacity: 1 !important;
+        }
+        
+        .right {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            background-color: #3B82F6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #2563EB;
+            transform: translateY(-2px);
+        }
+        
+        .ghost {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .ghost:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 0 30px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .kudos {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .pill {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            background: #0f1219;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 20px;
+            background: rgba(26, 31, 45, 0.6);
+            border-radius: 12px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .control-key {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .key {
+            display: block;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #3B82F6;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #3B82F6;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .game-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+        
+        .game-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn {
+            background: #3B82F6;
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+        }
+        
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .game-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a class="logo" href="index.html" aria-label="Home"><img src="assets/img/3DStrategyHub.svg" alt="  3DStrategyHub icon"><span> 3DStrategyHub</span></a>
+            <div class="menu">
+                <a href="index.html">Home</a>
+                <a href="game.html" style="opacity:1;font-weight:800">Play Game</a>
+                 <a href="about.html">About</a>
+                <a href="blog.html">Blog</a>
+                <a href="faq.html">FAQ</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                 
+            </div>
+            <div class="right">
+                <a class="btn ghost">Menu</a>
+                <a class="btn" href="game.html">Play</a>
+            </div>
+        </div>
+    </nav>
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess3D - Strategy Board Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <h1>Chess3D — Strategy Board Game</h1>
+            <p>Challenge your mind with 3D chess. Plan your moves, capture pieces, and checkmate your opponent!</p>
+            <div class="kudos">
+                <span class="pill">3D Graphics</span>
+                <span class="pill">Strategic Gameplay</span>
+                <span class="pill">AI Opponent</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="game-container">
+            <canvas id="chessCanvas"></canvas>
+        </div>
+
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-value" id="moves">0</div>
+                <div class="stat-label">Moves</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="capturedWhite">0</div>
+                <div class="stat-label">White Captured</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="capturedBlack">0</div>
+                <div class="stat-label">Black Captured</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="gameStatus">Your Turn</div>
+                <div class="stat-label">Game Status</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h3 style="text-align: center; margin-bottom: 15px;">Controls</h3>
+            <div class="control-group">
+                <div class="control-key">
+                    <span class="key">Mouse</span>
+                    <span>Select and Move Pieces</span>
+                </div>
+                <div class="control-key">
+                    <span class="key">R</span>
+                    <span>Rotate Board</span>
+                </div>
+                <div class="control-key">
+                    <span class="key">Z</span>
+                    <span>Undo Move</span>
+                </div>
+                <div class="control-key">
+                    <span class="key">H</span>
+                    <span>Show Hints</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-buttons">
+            <button class="game-btn primary-btn" id="newGameBtn">New Game</button>
+            <button class="game-btn secondary-btn" id="hintBtn">Hint</button>
+            <button class="game-btn secondary-btn" id="undoBtn">Undo</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Chess3D Game. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="chess3d.js"></script>
+</body>
+</html>
+</html>
+
+<script src="assets/js/game.js"></script>
+<footer class="footer"><div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+<div>© 2025   3DStrategyHub. All rights reserved.</div><div style="display:flex;gap:12px;align-items:center">
+<div style="display:flex;gap:12px;align-items:center"><span class="badge">Responsive • Age-gate</span></div>
+</div></footer><script src="assets/js/main.js"></script></body></html>
